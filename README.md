@@ -65,8 +65,8 @@ the front end loads the game you pick. There are no Gecko codes for the same
 reason as above.
 
 ### Status
-Tested in Dolphin only (Trilogy USA front end with a GameCube pad and no Wii
-Remote). Not yet tested on a real Wii. How it works:
+Tested in Dolphin only (Trilogy USA with a GameCube pad and no Wii Remote:
+front end, Metroid Prime and Metroid Prime 2 gameplay). Not yet tested on a real Wii. How it works:
 [docs/TECHNICAL.md](docs/TECHNICAL.md).
 
 ### Modded images

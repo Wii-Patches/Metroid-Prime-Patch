@@ -128,6 +128,11 @@ turns, B jumps, A fires (KPAD channel 0 reads A as `0x0800` and the Nunchuk stic
 1.0 while held). "Nunchuk is required." shows once after the save screen; the
 unpatched game shows it too with an emulated Wii Remote + Nunchuk.
 
+Single Player → Metroid Prime → Normal loads the patched `rs5mp1_p.dol` the same
+way. KPAD channel 0 reads A as `0x0800`, B as `0x0400` and the Nunchuk stick at 1.0
+from the opening cutscene on. On the frigate's landing deck the control stick
+walks, the C-stick turns, B jumps and A fires.
+
 Not tested on a real Wii. The poller is the one that works on hardware in the
 Barrel Blast patch, but this game's use of it is not hardware-verified.
 
