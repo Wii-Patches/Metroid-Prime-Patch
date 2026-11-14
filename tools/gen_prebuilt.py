@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Regenerate tools/prebuilt/*.json from src/ (needs devkitPPC and a retail main.dol).
 
-    MP_DOLS=R3IJ01=/path/to/main.dol,R32J01=/path/to/mp2/main.dol,RM3E01=/path/to/mp3/main.dol python3 tools/gen_prebuilt.py
+    MP_DOL_DIR=/path/to/dols python3 tools/gen_prebuilt.py     # <ID>.dol, mpt_usa/, mpt_pal/
+    MP_DOLS=R3IJ01=/path/to/main.dol,RM3E01=/path/to/mp3/main.dol python3 tools/gen_prebuilt.py
 """
 import json
 import os
@@ -31,7 +32,7 @@ def main():
             elif os.path.isfile(p):
                 dol_map['R3IJ01'] = p
     
-    mp_dols = os.path.expanduser('~/mp_dols')
+    mp_dols = os.environ.get('MP_DOL_DIR') or os.path.expanduser('~/mp_dols')
     for reg in REGIONS:
         cand = os.path.join(mp_dols, f'{reg}.dol')
         if reg not in dol_map and os.path.isfile(cand):

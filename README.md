@@ -15,6 +15,8 @@ Play all Wii releases of the **Metroid Prime series** with a **GameCube controll
 ### Controls
 
 #### GameCube Controller (Port 1 - No Wii Remote needed)
+Plug the pad into port 1; no Wii Remote needs to be connected. While the pad is
+plugged in it overrides a connected Wii Remote's buttons, stick and pointer.
 - **Control Stick**: Movement / strafe
 - **C-Stick**: Aiming / Pointer control
 - **A**: Fire Beam / Confirm
@@ -49,13 +51,23 @@ Or command line:
 ```bash
 python3 tools/patch_disc.py "Metroid Prime 3 - Corruption (USA).wbfs" --cc --gc
 ```
-The patcher extracts the image, applies the hooks directly to `sys/main.dol`, backs up the original as `<image>.bak`, and rebuilds the disc image.
+The patcher extracts the image, patches `sys/main.dol` (and, for Trilogy, the
+front end and the three game DOLs in `files/`), backs up the original as
+`<image>.bak`, and rebuilds the disc image.
 
-### 2. Dolphin / Gecko Codes
-Copy `codes/<ID>.ini` (`R3IJ01.ini`, `R32J01.ini`, `RM3E01.ini`) to your Dolphin `GameSettings/` directory and enable the Gecko codes.
+Turn off your USB loader's cheats, hook type and debugger for the patched disc:
+a Gecko code handler loads into the same memory as the patch.
 
-### 3. Riivolution
-Place `riivolution/<ID>.xml` on your SD card along with Riivolution.
+### 2. Riivolution (single-game discs only, untested)
+Place `riivolution/<ID>.xml` on your SD card along with Riivolution. There is no
+Riivolution patch for Trilogy: Riivolution patches memory once at boot, before
+the front end loads the game you pick. There are no Gecko codes for the same
+reason as above.
+
+### Status
+Tested in Dolphin only (Trilogy USA front end with a GameCube pad and no Wii
+Remote). Not yet tested on a real Wii. How it works:
+[docs/TECHNICAL.md](docs/TECHNICAL.md).
 
 ### Modded images
 

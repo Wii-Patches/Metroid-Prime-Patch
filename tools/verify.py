@@ -12,7 +12,7 @@ from regions import REGIONS
 
 
 def main():
-    mp_dols = os.path.expanduser('~/mp_dols')
+    mp_dols = os.environ.get('MP_DOL_DIR') or os.path.expanduser('~/mp_dols')
     dol_map = {}
     for r in REGIONS:
         cand = os.path.join(mp_dols, f'{r}.dol')

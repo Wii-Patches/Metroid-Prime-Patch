@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Emit the Gecko code lists and Riivolution XML from the prebuilt features.
+"""Emit the Riivolution XML from the prebuilt features.
 
-    python3 tools/build.py            # writes codes/<ID>.ini, codes/<ID>.txt, riivolution/<ID>.xml
+    python3 tools/build.py            # writes riivolution/<ID>.xml
 
-The patched-DOL path (tools/patcher.py, the GUI) uses the very same ops, so the
-three install methods cannot disagree.
+Only for the single-DOL discs: Riivolution patches memory once at boot, so it
+cannot reach the game DOLs Metroid Prime Trilogy's front end loads later.  There
+are no Gecko codes: the patch lives in the same low memory (0x80001800-0x80003000)
+as a Gecko code handler.  The patched-DOL path (tools/patcher.py, the GUI) uses
+the very same ops.
 """
 import os
 import sys
@@ -15,33 +18,6 @@ import features
 from regions import REGIONS
 
 ROOT = os.path.join(HERE, '..')
-
-CREDIT = {
-    'cc': 'quatric',
-    'gc': 'quatric',
-}
-BLURB = {
-    'cc': ['Play with a Classic Controller plugged into the Wii Remote: left stick moves, right stick aims the pointer.',
-           'A/R shoot, B jump, Y missile, X morph ball, ZL lock-on, L visor change, ZR beam change, + pause, - map.'],
-    'gc': ['Play with a GameCube controller in port 1 (no Wii Remote needed):',
-           'control stick moves, C-stick aims pointer, A/R shoot, B jump, Y missile, X morph ball, L lock-on, Z visor, Start pause.'],
-}
-COMBINED_WARNING = []
-
-
-def gecko_ini(region):
-    lines = ['[Gecko]']
-    for name in features.FEATURES:
-        if not features.available(name, region):
-            continue
-        f = features.load(name, region)
-        lines.append('$%s' % f.title)
-        lines.append('*By %s' % CREDIT[name])
-        lines.append('*%s (%s)' % (REGIONS[region]['label'], region))
-        lines += ['*' + b for b in BLURB[name]]
-        lines += COMBINED_WARNING if any(hasattr(o, 'data') for o in f.ops) else []
-        lines += f.gecko_lines()
-    return '\n'.join(lines) + '\n'
 
 
 def riivolution_xml(region):
@@ -69,16 +45,15 @@ def riivolution_xml(region):
 
 
 def main():
-    for d in ('codes', 'riivolution'):
-        os.makedirs(os.path.join(ROOT, d), exist_ok=True)
+    out = os.path.join(ROOT, 'riivolution')
+    os.makedirs(out, exist_ok=True)
     for region in REGIONS:
-        ini = gecko_ini(region)
-        with open(os.path.join(ROOT, 'codes', region + '.ini'), 'w') as fh:
-            fh.write(ini)
-        # same codes in the plain cheat-file layout loaders read (no [Gecko] header)
-        with open(os.path.join(ROOT, 'codes', region + '.txt'), 'w') as fh:
-            fh.write(ini.split('\n', 1)[1])
-        with open(os.path.join(ROOT, 'riivolution', region + '.xml'), 'w') as fh:
+        path = os.path.join(out, region + '.xml')
+        if '_' in region or region.startswith('R3M'):
+            if os.path.exists(path):
+                os.remove(path)                 # Trilogy: see the module docstring
+            continue
+        with open(path, 'w') as fh:
             fh.write(riivolution_xml(region))
         print(region, REGIONS[region]['label'])
 

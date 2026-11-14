@@ -85,8 +85,11 @@ def run_patch(image_path, log, done, which=('cc', 'gc')):
                 raise RuntimeError('could not find sys/main.dol in the extracted disc')
             targets.append((sys_main, region))
 
-            # Check for Trilogy sub-DOLs in files/
+            # Check for Trilogy sub-DOLs in files/.  rs5fe_p.dol is the game-select
+            # menu, byte-identical to sys/main.dol: the disc boots main.dol, but
+            # the games load /rs5fe_p.dol to return to the menu.
             sub_map = {
+                'rs5fe_p.dol': region,
                 'rs5mp1_p.dol': f'{region}_mp1',
                 'rs5mp2_p.dol': f'{region}_mp2',
                 'rs5mp3_p.dol': f'{region}_mp3',

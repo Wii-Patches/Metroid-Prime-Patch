@@ -4,11 +4,16 @@
 # its frame, then the call continues at its second instruction and returns here);
 # if it says "no controller" (-1) and a GameCube pad answers on the matching port,
 # say "connected, Nunchuk" instead.
+#
+# KPADRead asks WPADProbe first, every call, so this keeps KPAD reading the
+# channel while the pad answers (the SI poller and the first "connected" report
+# are in gc_frame.s).
     stwu    1, -0x20(1)
     mflr    0
     stw     0, 0x24(1)
     stw     3, 0x08(1)
     stw     4, 0x0c(1)
+    dbg     0x12
     stwu    1, -0x10(1)                 # displaced instruction
     lis     12, PROBE_BODY@ha
     addi    12, 12, PROBE_BODY@l
@@ -27,6 +32,7 @@
     blt     9f                          # error / no pad
     andis.  0, 7, 0x0080
     beq     9f                          # not a pad response
+    dbg     0x13
     li      3, 0                        # connected ...
     lwz     4, 0x0c(1)
     cmpwi   4, 0

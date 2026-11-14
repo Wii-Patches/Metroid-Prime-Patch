@@ -5,8 +5,9 @@
 # always a sample waiting.  With none, nothing does -- so if the ring is empty and a
 # GameCube pad answers on the matching port, make one sample from the pad right here
 # (the same conversion the callback hook uses) and add it to the ring the way the
-# callback would.  Scratch: r0, r3-r12; r3 holds the sample.
-    lbz     0, 0x10f(31)
+# callback would.  (KPADRead is only reached once the game has been told a
+# controller connected: gc_frame.s.)  Scratch: r0, r3-r12; r3 holds the sample.
+        lbz     0, 0x10f(31)
     cmpwi   0, 0
     bne     9f                          # samples are waiting: a remote is producing them
     cmplwi  27, 3
@@ -42,6 +43,7 @@ slot:
     lbz     0, 0x37(3)
     andi.   0, 0, 2
     beq     9f                          # no pad answered: nothing to add
+    dbg     0x11
     lbz     5, 0x10e(31)
     cmplwi  5, 16
     blt     idx
@@ -55,21 +57,5 @@ idx:
     addi    5, 5, 1
     stb     5, 0x10f(31)
 full:
-    # tell the game a controller has connected, once, the way the sampling callback does
-    lwz     0, 0x4d8(31)
-    cmpwi   0, 0
-    beq     9f
-    lbz     0, 0x522(31)
-    cmpwi   0, 0
-    bne     9f
-    li      0, 1
-    stb     0, 0x522(31)
-    mr      3, 27
-    li      4, 0
-    lwz     12, 0x4d8(31)
-    mtctr   12
-    bctrl
-    li      0, 0
-    stb     0, 0x523(31)
 9:
     lbz     0, 0x10f(31)                # displaced instruction

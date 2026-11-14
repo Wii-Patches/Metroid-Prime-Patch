@@ -35,3 +35,14 @@
     li      \reg, 0
 .Lm\@a:
 .endm
+
+# debug builds (MP_DEBUG=1 tools/gen_prebuilt.py): count events in the byte at
+# PSTATE+off, readable from a debugger.  Scratch: r11, r12.  Empty otherwise.
+.macro dbg off
+.ifdef DEBUG
+    lis     12, (PSTATE+\off)@ha
+    lbz     11, (PSTATE+\off)@l(12)
+    addi    11, 11, 1
+    stb     11, (PSTATE+\off)@l(12)
+.endif
+.endm

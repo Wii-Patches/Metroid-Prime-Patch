@@ -4,9 +4,6 @@
 #   write_idx: 0x13A(r26)
 #   count:     0x13B(r26)
 #   ring base: 0x13C(r26), element size 0x38
-# Connect callback:
-#   cb ptr:    0x50C(r26)
-#   fired flag:0x55B(r26)
     lbz     0, 0x13B(26)
     cmpwi   0, 0
     bne     9f                          # samples waiting: remote producing them
@@ -56,19 +53,5 @@ idx:
     addi    5, 5, 1
     stb     5, 0x13B(26)
 full:
-    # tell the game a controller has connected, once
-    lwz     0, 0x50C(26)
-    cmpwi   0, 0
-    beq     9f
-    lbz     0, 0x55B(26)
-    cmpwi   0, 0
-    bne     9f
-    li      0, 1
-    stb     0, 0x55B(26)
-    mr      3, 25
-    li      4, 1
-    lwz     12, 0x50C(26)
-    mtctr   12
-    bctrl
 9:
     lbz     0, 0x13B(26)                # displaced instruction
