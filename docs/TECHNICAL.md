@@ -133,6 +133,15 @@ way. KPAD channel 0 reads A as `0x0800`, B as `0x0400` and the Nunchuk stick at 
 from the opening cutscene on. On the frigate's landing deck the control stick
 walks, the C-stick turns, B jumps and A fires.
 
+Single Player → Metroid Prime 3 → Normal loads the patched `rs5mp3_p.dol`. In the
+gunship's cockpit the C-stick moves the aiming reticle and pans the view, A
+interacts (the message screen, the radio buttons) and B backs out of a close-up.
+On-foot play on the Olympus comes after the radio code puzzle and was not reached.
+
+The pointer is absolute (C-stick position → screen position), but the front-end
+menus smooth it heavily, so it takes about a second to settle where the stick
+points.
+
 Not tested on a real Wii. The poller is the one that works on hardware in the
 Barrel Blast patch, but this game's use of it is not hardware-verified.
 
